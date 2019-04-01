@@ -12,6 +12,10 @@ Vue.component('app-header', {
           <li class="nav-item active">
             <router-link class="nav-link" to="/">Home <span class="sr-only">(current)</span></router-link>
           </li>
+          
+          <li>
+            <router-link class="nav-link" to="/upload-form/">Upload Form <span class="sr-only">(current)</span></router-link>
+          </li>
         </ul>
       </div>
     </nav>
@@ -40,8 +44,44 @@ const Home = Vue.component('home', {
     }
 });
 
+const Form = Vue.component('upload-form', {
+     template: `
+        <div>
+        <h2>Upload</h2>
+        <div>
+            <form id="uploadForm"  @submit.prevent="uploadPhoto" method="POST" enctype="multipart/form-data">
+                <div>
+                <div for="msg">Description: </div> </br>    <textarea class="form-control" rows="5"  cols="50" id="msg" name="description"></textarea><br></br>
+                <input type="file" name="upload"/></br>
+                </div></br>
+                <button class="btn btn-success" type="submit">Upload</button>
+            </form>
+        </div>
+        </div>
+        `,
+    methods:{
+        uploadForm: function(){
+            let uploadForm = document.getElementById('uploadForm');
+            let form_data = new FormData(uploadForm);
+            fetch("/api/upload", {
+            method: 'POST',
+            body: form_data
+            })
+            .then(function (response) {
+            return response.json();
+            })
+            .then(function (jsonResponse) {
+            // display a success message
+            console.log(jsonResponse);
+            })
+            .catch(function (error) {
+            console.log(error);
+        });
+        }
+    }})
+        
 const NotFound = Vue.component('not-found', {
-    template: `
+    template: `02695
     <div>
         <h1>404 - Not Found</h1>
     </div>
