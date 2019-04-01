@@ -6,13 +6,33 @@ This file creates your application.
 """
 
 from app import app
-from flask import render_template, request
-
+from flask import render_template, request, jsonify 
+from forms import UploadForm
+import os, json
+from werkzeug.utils import secure_filename
 ###
 # Routing for your application.
 ###
+@app.route('/api/upload', methods=['POST'])
+def upload():
+    form=UploadForm()
+    if form.validate_on_submit():
+        description=form.description.data
+        file=request.files['file']
+        filename=secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+        i={"message": "File Upload Successful", 
+            "filename": file.filename, 
+            "description":description }
+        return jsonify(i)
 
-
+    else:
+        error_list=[]
+        for i in form_errors(form):
+           error_list.append(i)
+           json_error_list={}
+           json_error_list['errors'] = error_list
+           return json.dumps(json_error_list)
 # Please create all new routes and view functions above this route.
 # This route is now our catch all route for our VueJS single page
 # application.

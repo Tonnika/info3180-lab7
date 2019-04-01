@@ -1,7 +1,7 @@
 from flask_wtf import Form 
-from wtforms import TextArea, FileField 
-from wtforms.validators import Length
+from wtforms import TextAreaField, FileField 
+from wtforms.validators import Length, InputRequired
 
 class UploadForm(Form):
-    description = TextArea('Description', Length(max=80))
+    description = TextAreaField('Description', Length(max=80),validators=[InputRequired()])
     photo = FileField('Photo') 
